@@ -1,0 +1,10 @@
+{
+    "name": "SmartDeed Property #1",
+    "description": "3-bedroom apartment in downtown Saskatoon",
+    "image": "https://gateway.pinata.cloud/ipfs/bafybeiabxcnp37ft7jdpl2aam5imufk34dx7vpjpkgvr2dtw3oi7ffo554",
+    "attributes": [
+      { "trait_type": "Location", "value": "Saskatoon Downtown" },
+      { "trait_type": "Size", "value": "1200 sqft" },
+      { "trait_type": "Bedrooms", "value": "3" }
+    ]
+  }

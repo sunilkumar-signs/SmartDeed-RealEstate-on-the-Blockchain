@@ -1,0 +1,10 @@
+{
+  "name": "SmartDeed Property #2",
+  "description": "4-bedroom bungalow in suburban Saskatoon",
+  "image": "https://gateway.pinata.cloud/ipfs/bafkreifx63iejvz5w2fhpc2po5mxwyisr3hrycnuuu44vaqwiv4hhxps6q",
+  "attributes": [
+    { "trait_type": "Location", "value": "Saskatoon Suburbs" },
+    { "trait_type": "Size", "value": "1600 sqft" },
+    { "trait_type": "Bedrooms", "value": "4" }
+  ]
+}

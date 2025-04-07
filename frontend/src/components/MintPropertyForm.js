@@ -1,53 +1,72 @@
 import { useState } from "react";
 
 export default function MintPropertyForm({ contract, wallet }) {
-  const [to, setTo] = useState(wallet);
-  const [tokenURI, setTokenURI] = useState("");
-  const [status, setStatus] = useState("");
+  const [tokenURI, setTokenURI] = useState("https://gateway.pinata.cloud/ipfs/");
+  const [minting, setMinting] = useState(false);
+  const [mintedTokenId, setMintedTokenId] = useState(null);
 
-  const handleMint = async (e) => {
-    e.preventDefault();
+  const handleMint = async () => {
+    if (!tokenURI) return alert("Enter a token URI");
     try {
-      setStatus("Minting...");
-      const tx = await contract.mintProperty(to, tokenURI);
-      await tx.wait();
-      setStatus("Minted successfully");
-    } catch (error) {
-      console.error(error);
-      setStatus(" Minting failed");
+      setMinting(true);
+      const tx = await contract.mintProperty(wallet, tokenURI);
+      const receipt = await tx.wait();
+
+      const event = receipt.logs
+        .map((log) => {
+          try {
+            return contract.interface.parseLog(log);
+          } catch {
+            return null;
+          }
+        })
+        .find((e) => e && e.name === "Transfer");
+
+      const tokenId = event?.args?.tokenId?.toString();
+      setMintedTokenId(tokenId);
+      setTokenURI("https://gateway.pinata.cloud/ipfs/"); // Reset to default after mint
+    } catch (err) {
+      alert("Minting failed");
+      console.error(err);
+    } finally {
+      setMinting(false);
     }
   };
 
   return (
-    <div className="border p-4 rounded-xl bg-white shadow max-w-xl">
-      <h2 className="text-xl font-semibold mb-4">Mint Property Token</h2>
-      <form onSubmit={handleMint} className="space-y-4">
-        <div>
-          <label className="block font-medium">Owner Address</label>
-          <input
-            type="text"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <div>
-          <label className="block font-medium">Token URI (IPFS/URL)</label>
-          <input
-            type="text"
-            value={tokenURI}
-            onChange={(e) => setTokenURI(e.target.value)}
-            className="w-full border p-2 rounded"
-          />
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Mint Token
-        </button>
-        {status && <p className="text-sm mt-2">{status}</p>}
-      </form>
+    <div className="border p-4 rounded-xl bg-white shadow space-y-4">
+      <h2 className="text-lg font-semibold">Mint Property Token</h2>
+      <div>
+        <label className="block text-sm font-medium mb-1">Owner Address</label>
+        <input
+          type="text"
+          disabled
+          value={wallet}
+          className="w-full px-3 py-2 border rounded text-sm bg-gray-100"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium mb-1">Token URI (IPFS/URL)</label>
+        <input
+          type="text"
+          value={tokenURI}
+          onChange={(e) => setTokenURI(e.target.value)}
+          className="w-full px-3 py-2 border rounded text-sm"
+        />
+      </div>
+      <button
+        onClick={handleMint}
+        disabled={minting}
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        {minting ? "Minting..." : "Mint Token"}
+      </button>
+
+      {mintedTokenId && (
+        <p className="text-green-600 text-sm mt-2">
+          Property token minted! Token ID: <strong>{mintedTokenId}</strong>
+        </p>
+      )}
     </div>
   );
 }

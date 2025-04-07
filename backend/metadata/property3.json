@@ -1,0 +1,10 @@
+  {
+    "name": "SmartDeed Property #3",
+    "description": "Modern 2-bedroom condo near the river",
+    "image": "https://gateway.pinata.cloud/ipfs/bafkreieea2sd7pkygwx3t7nygxogoogddpbfalbw3oaamxpl562cmasche",
+    "attributes": [
+      { "trait_type": "Location", "value": "Riverside Saskatoon" },
+      { "trait_type": "Size", "value": "900 sqft" },
+      { "trait_type": "Bedrooms", "value": "2" }
+    ]
+  }

@@ -9,14 +9,33 @@ contract PropertyToken is ERC721URIStorage, Ownable {
 
     constructor() ERC721("SmartDeed Property", "SDP") Ownable(msg.sender) {}
 
-    function mintProperty(address to, string memory tokenURI) public onlyOwner {
+    function mintProperty(address to, string memory uri) public onlyOwner {
         uint256 tokenId = _tokenIdCounter;
         _safeMint(to, tokenId);
-        _setTokenURI(tokenId, tokenURI);
+        _setTokenURI(tokenId, uri);
         _tokenIdCounter++;
     }
 
     function getCurrentTokenId() public view returns (uint256) {
         return _tokenIdCounter;
+    }
+
+    // Only override from ERC721URIStorage (NOT ERC721 directly)
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }

@@ -1,0 +1,10 @@
+  {
+    "name": "SmartDeed Property #4",
+    "description": "5-bedroom luxury estate in east Saskatoon",
+    "image": "https://gateway.pinata.cloud/ipfs/bafkreigh24jhdtqdfmg2bmtbkan7slagbnsxxow7r7lzzdvmewcowodqga",
+    "attributes": [
+      { "trait_type": "Location", "value": "East Saskatoon" },
+      { "trait_type": "Size", "value": "2200 sqft" },
+      { "trait_type": "Bedrooms", "value": "5" }
+    ]
+  }

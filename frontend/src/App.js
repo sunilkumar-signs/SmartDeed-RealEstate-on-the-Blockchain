@@ -2,8 +2,13 @@ import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import MintPropertyForm from "./components/MintPropertyForm";
 import ListPropertyForm from "./components/ListPropertyForm";
-import ListedProperties from "./components/ListedProperties";
 import Gallery from "./components/Gallery";
+import Header from "./components/Header";
+import HeroSection from "./components/HeroSection";
+import RealPropertyGallery from "./components/RealPropertyGallery";
+import ListedProperties from "./components/ListedProperties";
+import EthPriceWidget from "./components/EthPriceWidget";
+
 
 import {
   PROPERTY_TOKEN_ADDRESS,
@@ -16,7 +21,7 @@ export default function App() {
   const [wallet, setWallet] = useState(null);
   const [propertyToken, setPropertyToken] = useState(null);
   const [marketplace, setMarketplace] = useState(null);
-  const [activeTab, setActiveTab] = useState("home"); // NEW
+  const [activePage, setActivePage] = useState("home");
 
   const connectWallet = async () => {
     if (!window.ethereum) return alert("MetaMask not found");
@@ -48,31 +53,32 @@ export default function App() {
   }, []);
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-3xl font-bold mb-4">SmartDeed DApp</h1>
-      {wallet && <p className="text-sm">Connected Wallet: {wallet}</p>}
-      <div className="flex space-x-4 border-b pb-2 mt-4">
-        {["home", "gallery", "list"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-t ${
-              activeTab === tab
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600"
-            }`}
-          >
-            {tab === "home" && "🏠 Home"}
-            {tab === "gallery" && "🖼️ Gallery"}
-            {tab === "list" && "🏗️ List Property"}
-          </button>
-        ))}
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header wallet={wallet} setActivePage={setActivePage} />
 
-      {/* Tab Content */}
-      {activeTab === "home" && (
-        <div>
-          <p className="text-lg mb-4">Welcome to SmartDeed — the future of real estate on-chain.</p>
+      {activePage === "home" && (
+        <>
+          <HeroSection />
+          <EthPriceWidget /> 
+          <main className="p-6 space-y-6 max-w-7xl mx-auto">
+            <h2 className="text-3xl font-semibold text-center mb-10">
+              Newest homes for sale in <span className="text-blue-600">Saskatoon</span>
+            </h2>
+
+            {propertyToken && marketplace && wallet && (
+              <RealPropertyGallery
+                propertyToken={propertyToken}
+                marketplace={marketplace}
+                wallet={wallet}
+              />
+            )}
+          </main>
+        </>
+      )}
+
+      {activePage === "buy" && (
+        <main className="p-6 space-y-6 max-w-7xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-4">Properties Available to Buy</h2>
           {marketplace && wallet && (
             <ListedProperties
               marketplace={marketplace}
@@ -80,19 +86,21 @@ export default function App() {
               propertyToken={propertyToken}
             />
           )}
-        </div>
+        </main>
       )}
 
-      {activeTab === "gallery" && (
-        <Gallery
-          propertyToken={propertyToken}
-          marketplace={marketplace}
-          wallet={wallet}
-        />
+      {activePage === "gallery" && (
+        <main className="p-6 max-w-7xl mx-auto">
+          <Gallery
+            propertyToken={propertyToken}
+            marketplace={marketplace}
+            wallet={wallet}
+          />
+        </main>
       )}
 
-      {activeTab === "list" && (
-        <>
+      {activePage === "list" && (
+        <main className="p-6 max-w-7xl mx-auto">
           {propertyToken && wallet && (
             <MintPropertyForm contract={propertyToken} wallet={wallet} />
           )}
@@ -103,7 +111,7 @@ export default function App() {
               wallet={wallet}
             />
           )}
-        </>
+        </main>
       )}
     </div>
   );

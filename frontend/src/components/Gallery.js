@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ethers } from "ethers";
 
 export default function Gallery({ propertyToken, marketplace, wallet }) {
   const [tokens, setTokens] = useState([]);
 
-  const fetchGallery = async () => {
+  const fetchGallery = useCallback(async () => {
     const results = [];
 
     for (let tokenId = 0; tokenId < 10; tokenId++) {
@@ -22,30 +22,32 @@ export default function Gallery({ propertyToken, marketplace, wallet }) {
           ) {
             listing = {
               price: ethers.formatEther(data[0]),
-              seller: data[1]
+              seller: data[1],
             };
           }
-        } catch (_) {}
+        } catch (_) {
+          // Not listed — continue
+        }
 
         results.push({
           tokenId,
           metadata,
           owner,
-          listing
+          listing,
         });
       } catch (err) {
-        // skip if token doesn't exist
+        // Token doesn't exist — skip
       }
     }
 
     setTokens(results);
-  };
+  }, [propertyToken, marketplace]);
 
   useEffect(() => {
     if (propertyToken && marketplace) {
       fetchGallery();
     }
-  }, [propertyToken, marketplace]);
+  }, [fetchGallery]);
 
   return (
     <div className="mt-12">

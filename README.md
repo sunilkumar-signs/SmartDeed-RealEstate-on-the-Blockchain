@@ -1,63 +1,82 @@
-# SmartDeed Project
+SmartDeed Project
 
-**SmartDeed** is a decentralized application (DApp) built to manage tokenized assets on the blockchain. It consists of two parts:
+SmartDeed is a decentralized real estate platform that allows users to tokenize, list, and buy property assets on the blockchain. It features both on-chain contract management and off-chain oracle integration for real-time ETH/USD pricing.
 
-- **Frontend**: A React-based user interface that allows interaction with the smart contracts deployed on the blockchain.
-- **Backend**: The smart contracts developed using **Solidity** and deployed with **Hardhat**.
+Project Structure:
+SmartDeed/
+├── backend/      ← Smart contracts (Solidity), Hardhat, custom oracle integration
+│   ├── contracts/
+│   ├── scripts/
+│   ├── updateOracle.js
+│   ├── .env.example
+├── frontend/     ← React UI to interact with contracts (mint, list, buy, view)
+│   ├── src/
+│   └── public/
+└── README.md
 
-## Tech Stack
+Tech Stack:
+Frontend: React, ethers.js, Tailwind CSS
+Backend: Solidity, Hardhat, OpenZeppelin
+Oracle: CoinMarketCap API + ethers.js
+Wallet: MetaMask
 
-- **Frontend**: React, Web3.js or ethers.js, CSS/SCSS
-- **Backend**: Solidity, Hardhat, OpenZeppelin
+Prerequisites:
+- Node.js (v14 or higher)
+- npm
+- Hardhat
+- MetaMask (browser extension)
 
-## Prerequisites
+Setup Instructions:
 
-Before you start, ensure you have the following tools installed on your machine:
+Backend (Hardhat)
+1. Navigate to the backend folder:
+   cd backend
 
-- **Node.js** (v14 or higher)
-- **npm** (Node Package Manager)
-- **Hardhat** (used for blockchain development)
-- A **Metamask** or other Web3 wallet to interact with the blockchain
+2. Install dependencies:
+   npm install
 
-## Setup Instructions
+3. Compile and deploy contracts to Hardhat local:
+   npx hardhat compile
+   npx hardhat node
 
-### Backend
+4. In a separate terminal, deploy contracts:
+   npx hardhat run scripts/deploy.js --network localhost
 
-1. First, navigate to the `backend` directory:
-    ```bash
-    cd backend
-    ```
+Frontend (React)
+1. Navigate to the frontend folder:
+   cd frontend
 
-2. Install the required dependencies:
-    ```bash
-    npm install
-    ```
+2. Install dependencies:
+   npm install
 
-3. To compile and deploy the smart contracts, use the following commands:
-    ```bash
-    npx hardhat compile
-    npx hardhat run scripts/deploy.js --network <your-network>
-    ```
+3. Start the development server:
+   npm start
 
-### Frontend
+4. Open http://localhost:3000 in your browser.
 
-1. Now, move to the `frontend` directory:
-    ```bash
-    cd frontend
-    ```
+Custom Oracle Integration (ETH/USD)
 
-2. Install the necessary dependencies:
-    ```bash
-    npm install
-    ```
+SmartDeed uses a custom off-chain oracle that fetches real-time ETH/USD price from CoinMarketCap and updates an on-chain contract (OracleHandler).
 
-3. To start the frontend development server, run:
-    ```bash
-    npm start
-    ```
+.env Configuration (in /backend)
+Create a .env file with the following content:
 
-4. Open your browser and go to `http://localhost:3000` to interact with the application.
+PRIVATE_KEY=0xYourHardhatPrivateKey
+ORACLE_ADDRESS=0xYourDeployedOracleAddress
+CMC_API_KEY=your_coinmarketcap_api_key
+RPC_URL=http://localhost:8545
 
-## License
+Note: .env is ignored by Git. Do not commit it.
 
+Update Oracle Price Manually:
+cd backend
+node updateOracle.js
+
+License:
 This project is licensed under the MIT License.
+
+Contributions:
+PRs are welcome! Please create a new branch and submit your changes via pull request.
+
+Contact:
+GitHub Issues: https://github.com/sunilkumar-signs/SmartDeed-RealEstate-on-the-Blockchain/issues
